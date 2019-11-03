@@ -24,7 +24,7 @@ soup = BeautifulSoup(webpage, 'html.parser')
 html = soup.prettify('utf-8')
 song_json = {}
 song_json["Lyrics"] = []
-# song_json["Comments"] = []
+song_json["Comments"] = []
 # print(html)
 
 for title in soup.findAll('title'):
@@ -35,6 +35,13 @@ for span in soup.findAll('span', attrs = {'class' : 'metadata_unit-info metadata
 
 for div in soup.findAll('div', attrs = {'class': 'lyrics'}):
   song_json["Lyrics"].append(div.text.strip().split("\n"))
+
+# Extract the Comments on the song
+for div in soup.findAll('div', attrs = {'class': 'rich_text_formatting'}):
+  comments = div.text.strip().split("\n")
+  for comment in comments:
+      if comment!="":
+          song_json["Comments"].append(comment)
 
 with open(song_json["Title"] + '.json', 'w') as outfile:
   json.dump(song_json, outfile, indent = 4, ensure_ascii = False)
