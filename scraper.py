@@ -36,3 +36,7 @@ for span in soup.findAll('span', attrs = {'class' : 'metadata_unit-info metadata
 for div in soup.findAll('div', attrs = {'class': 'lyrics'}):
   song_json["Lyrics"].append(div.text.strip().split("\n"))
 
+with open(song_json["Title"] + '.json', 'w') as outfile:
+  json.dump(song_json, outfile, indent = 4, ensure_ascii = False)
+
+print(song_json)
