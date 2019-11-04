@@ -11,18 +11,18 @@ from urllib.request import Request, urlopen
 
 from getUrl import url
 
-# For ignoring SSL certificate errors
+#For ignoring SSL certificate errors
 ct = ssl.create_default_context()
 ct.check_hostname = False
 ct.verify_mode = ssl.CERT_NONE
 
-# Making the website believe that you are accessing it using a browser
+#Making the website believe that you are accessing it using a browser
 req = Request(url, headers = {'User-Agent' : 'Chrome/77.0.3865.120' })
 webpage = urlopen(req).read()
 
 # print(webpage)
 
-# Creating a BeautifulSoup object of the html page for extraction of data
+#Creating a BeautifulSoup object of the html page for extraction of data
 soup = BeautifulSoup(webpage, 'html.parser')
 html = soup.prettify('utf-8')
 song_json = {}
@@ -34,7 +34,7 @@ song_json["Comments"] = []
 for title in soup.findAll('title'):
     song_json["Title"] = title.text.strip()
 
-# Extract the release date of the song
+#Extract the release date of the song
 for span in soup.findAll('span', attrs = {'class' : 'metadata_unit-info metadata_unit-info--text_only'}):
     song_json["Release Date"] = span.text.strip()
 
@@ -43,11 +43,11 @@ for span in soup.findAll('span', attrs = {'class' : 'metadata_unit-info metadata
 for div in soup.findAll('div', attrs = {'class': 'lyrics'}):
   song_json["Lyrics"].append(div.text.strip().split("\n"))
 
-# Extract the Comments on the song
+#Extract the Comments on the song
 for div in soup.findAll('div', attrs = {'class': 'rich_text_formatting'}):
   comments = div.text.strip().split("\n")
   for comment in comments:
-      if comment!="":
+      if comment != " ":
           song_json["Comments"].append(comment)
 
 #Save the json created with the file name as title + .json
